@@ -1,0 +1,115 @@
+[gd_scene load_steps=14 format=3 uid="uid://dfhh6qq7w0hgt"]
+
+[ext_resource type="Script" path="res://Character.gd" id="1_0735a"]
+[ext_resource type="Texture2D" uid="uid://dbgr5uwfgwmxa" path="res://assets/ant_walk.png" id="1_snq0g"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k6pix"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1b0r4"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 0, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_paf1d"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 248, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_36nx2"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 496, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pbbv4"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 744, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nl4ev"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 992, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m2idf"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 1240, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_34egn"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 1488, 202, 248)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdlp8"]
+atlas = ExtResource("1_snq0g")
+region = Rect2(0, 1736, 202, 248)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2e7i7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1b0r4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_paf1d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_36nx2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pbbv4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nl4ev")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m2idf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_34egn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdlp8")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 10.0
+}]
+
+[sub_resource type="LabelSettings" id="LabelSettings_o5dbl"]
+font_size = 10
+
+[node name="Ant" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_0735a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_k6pix")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.1, 0.1)
+sprite_frames = SubResource("SpriteFrames_2e7i7")
+animation = &"walk"
+
+[node name="RayCast2D_Center" type="RayCast2D" parent="."]
+target_position = Vector2(150, 0)
+collide_with_areas = true
+
+[node name="RayCast2D_CenterRight" type="RayCast2D" parent="."]
+target_position = Vector2(130, 50)
+collide_with_areas = true
+
+[node name="RayCast2D_CenterLeft" type="RayCast2D" parent="."]
+target_position = Vector2(130, -50)
+collide_with_areas = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="Label" type="Label" parent="."]
+offset_left = -16.0
+offset_top = -5.0
+offset_right = 4.0
+offset_bottom = 13.0
+rotation = 1.5708
+scale = Vector2(0.957, 1)
+text = "100"
+label_settings = SubResource("LabelSettings_o5dbl")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
