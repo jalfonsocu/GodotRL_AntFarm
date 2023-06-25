@@ -5,10 +5,18 @@ extends CharacterBody2D
 @export var rotation_speed = 1.8
 
 @export var energy = 100
+var center_collider_type = 0
+var left_collider_type = 0
+var right_collider_type = 0
+
+var center_collider_distance = -1
+var left_collider_distance = -1
+var right_collider_distance = -1
 
 var rotation_direction = 0
 
 signal health_depleted
+signal eat
 
 
 func _ready():
@@ -30,15 +38,26 @@ func _physics_process(delta):
 
 func _process(delta):
 	if $RayCast2D_Center.is_colliding():
-		print($RayCast2D_Center.get_collider())
-		print(distance_to_collider($RayCast2D_Center))
-	if $RayCast2D_CenterLeft.is_colliding():
-		print($RayCast2D_CenterLeft.get_collider())
-		print(distance_to_collider($RayCast2D_CenterLeft))
-	if $RayCast2D_CenterRight.is_colliding():
-		print($RayCast2D_CenterRight.get_collider())
-		print(distance_to_collider($RayCast2D_CenterRight))
+		center_collider_type = detect_object_type($RayCast2D_Center.get_collider())
+		center_collider_distance = distance_to_collider($RayCast2D_Center)
+	else:
+		center_collider_distance = -1
+		center_collider_type = 0
 		
+	if $RayCast2D_CenterLeft.is_colliding():
+		left_collider_type = detect_object_type($RayCast2D_CenterLeft.get_collider())
+		left_collider_distance = distance_to_collider($RayCast2D_CenterLeft)
+	else:
+		left_collider_distance = -1
+		left_collider_type = 0
+	
+	if $RayCast2D_CenterRight.is_colliding():
+		right_collider_type = detect_object_type($RayCast2D_CenterRight.get_collider())
+		right_collider_distance = distance_to_collider($RayCast2D_CenterRight)
+	else:
+		right_collider_distance = -1
+		right_collider_type = 0
+
 
 
 func _on_timer_timeout():
@@ -55,4 +74,12 @@ func distance_to_collider(ray):
 		distance = origin.distance_to(collision_point)
 	return distance
 
-
+func detect_object_type(object):
+	if  object.to_string() == "Food":
+		return 1
+	else:
+		return 10
+		
+func eat_action():
+	eat.emit()
+	

@@ -43,9 +43,20 @@ shape = SubResource("RectangleShape2D_30nnf")
 [node name="Sprite2D" type="Sprite2D" parent="RigidBody2D3"]
 texture = ExtResource("3_yum02")
 
-[node name="Ant" parent="." instance=ExtResource("3_is2qa")]
-position = Vector2(420, 390)
-scale = Vector2(3, 3)
+[node name="Area_Food" parent="." instance=ExtResource("5_0mh5k")]
+position = Vector2(404, 588)
+
+[node name="Area_Food3" parent="." instance=ExtResource("5_0mh5k")]
+position = Vector2(791, 130)
+
+[node name="Area_Food2" parent="." instance=ExtResource("5_0mh5k")]
+position = Vector2(686, 805)
+
+[node name="Area_Food4" parent="." instance=ExtResource("5_0mh5k")]
+position = Vector2(134, 356)
+
+[node name="Area_Food5" parent="." instance=ExtResource("5_0mh5k")]
+position = Vector2(100, 898)
 
 [node name="Limit" type="RigidBody2D" parent="."]
 
@@ -100,5 +111,6 @@ position = Vector2(513, 21)
 scale = Vector2(22.8, 0.44)
 texture = ExtResource("4_xhsdr")
 
-[node name="Area_Food" parent="." instance=ExtResource("5_0mh5k")]
-position = Vector2(404, 593)
+[node name="Ant" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(420, 390)
+scale = Vector2(3, 3)
