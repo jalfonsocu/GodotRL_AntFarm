@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://dfhh6qq7w0hgt"]
+[gd_scene load_steps=16 format=3 uid="uid://dfhh6qq7w0hgt"]
 
 [ext_resource type="Script" path="res://Character.gd" id="1_0735a"]
 [ext_resource type="Texture2D" uid="uid://dbgr5uwfgwmxa" path="res://assets/ant_walk.png" id="1_snq0g"]
+[ext_resource type="Script" path="res://controller.gd" id="3_djaav"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k6pix"]
 
@@ -72,6 +73,8 @@ animations = [{
 [sub_resource type="LabelSettings" id="LabelSettings_o5dbl"]
 font_size = 10
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8n2oe"]
+
 [node name="Ant" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_0735a")
@@ -112,4 +115,15 @@ scale = Vector2(0.957, 1)
 text = "100"
 label_settings = SubResource("LabelSettings_o5dbl")
 
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_8n2oe")
+
+[node name="AIController2D" type="Node2D" parent="."]
+script = ExtResource("3_djaav")
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

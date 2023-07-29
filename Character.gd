@@ -4,7 +4,13 @@ extends CharacterBody2D
 @export var speed = 100
 @export var rotation_speed = 1.8
 
+@export var max_energy = 100
 @export var energy = 100
+@export var bite_size = 10
+
+@onready var ai_controller = $AIController2D
+
+
 var center_collider_type = 0
 var left_collider_type = 0
 var right_collider_type = 0
@@ -13,28 +19,58 @@ var center_collider_distance = -1
 var left_collider_distance = -1
 var right_collider_distance = -1
 
+var food_area
+var in_food_area = false
+
 var rotation_direction = 0
 
 signal health_depleted
-signal eat
 
 
 func _ready():
+	ai_controller.init(self)
 	$Timer.start()
+	
+func game_over():
+	ai_controller.done = true
+	ai_controller.needs_reset = true
 
 func get_input():
-	rotation_direction = Input.get_axis("left", "right")
-	velocity = transform.x * Input.get_axis("down", "up") * speed
+	#rotation_direction = Input.get_axis("left", "right")
+	#velocity = transform.x * Input.get_axis("down", "up") * speed
+	rotation_direction = ai_controller.turn_action
+	velocity = transform.x * ai_controller.move_action * speed
+	
+	if ai_controller.move_action == 0 :
+		$AnimatedSprite2D.stop()
+	else:
+		$AnimatedSprite2D.play("walk")
+		
+	if ai_controller.interact_action:
+		eat_action()
 	
 	if Input.is_action_pressed("up"):
 		$AnimatedSprite2D.play("walk")
 	if Input.is_action_just_released("up"):
 		$AnimatedSprite2D.stop()
+	if Input.is_action_just_pressed("eat"):
+		eat_action()
+		
+	
 
 func _physics_process(delta):
+	if ai_controller.needs_reset:
+		ai_controller.reset()
+		return
+		
 	get_input()
 	rotation += rotation_direction * rotation_speed * delta
 	move_and_slide()
+	
+#	for index in get_slide_collision_count():
+#		var collision := get_slide_collision(index)
+#		var body := collision.get_collider()
+#		print("Collided with: ", body.name)
 
 func _process(delta):
 	if $RayCast2D_Center.is_colliding():
@@ -62,8 +98,11 @@ func _process(delta):
 
 func _on_timer_timeout():
 	energy = energy -1
+	ai_controller.reward -= 0.1
 	$Label.text = str(energy)
 	if energy <= 0:
+		ai_controller.done = true
+		ai_controller.needs_reset = true
 		health_depleted.emit()
 		
 func distance_to_collider(ray):
@@ -75,11 +114,43 @@ func distance_to_collider(ray):
 	return distance
 
 func detect_object_type(object):
-	if  object.to_string() == "Food":
-		return 1
-	else:
-		return 10
+	if is_instance_valid(object):
+		if  object.to_string() == "Food":
+			ai_controller.reward += 0.1
+			return 1
+		else:
+			return 10
 		
 func eat_action():
-	eat.emit()
+	if in_food_area:
+		if food_area.food_amount <= bite_size:
+			energy = energy + food_area.food_amount
+			food_area.food_amount = 0
+			food_area.queue_free()
+			ai_controller.reward += 5.0
+		else:
+			energy = energy + bite_size
+			food_area.food_amount = food_area.food_amount - bite_size
+			food_area.update_label()
+			ai_controller.reward += 5.0
+		if energy > max_energy:
+			energy = max_energy
+		$Label.text = str(energy)
 	
+	in_food_area = false
+	
+
+
+func _on_area_2d_area_entered(area):
+	print("Entrada en área")
+	print(area.to_string())
+	if detect_object_type(area) == 1:
+		in_food_area = true
+	food_area = area
+	ai_controller.reward += 0.3
+
+
+func _on_area_2d_area_exited(area):
+	print("Salida área")
+	print(area.to_string())
+	in_food_area = false

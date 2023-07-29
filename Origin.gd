@@ -14,3 +14,4 @@ func _process(delta):
 func _on_character_body_2d_health_depleted():
 	print("Liberado")
 	$CharacterBody2D.queue_free()
+

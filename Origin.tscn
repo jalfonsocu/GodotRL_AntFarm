@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b82y7f3aua8ie"]
+[gd_scene load_steps=9 format=3 uid="uid://b82y7f3aua8ie"]
 
 [ext_resource type="Script" path="res://Origin.gd" id="1_dlk6r"]
 [ext_resource type="PackedScene" uid="uid://dfhh6qq7w0hgt" path="res://Ant.tscn" id="3_is2qa"]
 [ext_resource type="Texture2D" uid="uid://co1i0ly1ihj24" path="res://icon.svg" id="3_yum02"]
 [ext_resource type="Texture2D" uid="uid://c6pnx2i5a12k3" path="res://assets/Red.png" id="4_xhsdr"]
 [ext_resource type="PackedScene" uid="uid://rjixbaqdu5n7" path="res://Food.tscn" id="5_0mh5k"]
+[ext_resource type="Script" path="res://addons/godot_rl_agents/sync.gd" id="6_tofxx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_30nnf"]
 
@@ -113,4 +114,27 @@ texture = ExtResource("4_xhsdr")
 
 [node name="Ant" parent="." instance=ExtResource("3_is2qa")]
 position = Vector2(420, 390)
-scale = Vector2(3, 3)
+
+[node name="Ant2" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(140, 557)
+
+[node name="Ant3" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(138, 234)
+
+[node name="Ant4" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(72, 791)
+
+[node name="Ant5" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(880, 619)
+
+[node name="Ant6" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(678, 130)
+
+[node name="Ant7" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(60, 361)
+
+[node name="Ant8" parent="." instance=ExtResource("3_is2qa")]
+position = Vector2(567, 742)
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("6_tofxx")
