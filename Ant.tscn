@@ -90,19 +90,19 @@ sprite_frames = SubResource("SpriteFrames_2e7i7")
 animation = &"walk"
 
 [node name="RayCast2D_Center" type="RayCast2D" parent="."]
-target_position = Vector2(150, 0)
+target_position = Vector2(300, 0)
 collide_with_areas = true
 
 [node name="RayCast2D_CenterRight" type="RayCast2D" parent="."]
-target_position = Vector2(130, 50)
+target_position = Vector2(250, 70)
 collide_with_areas = true
 
 [node name="RayCast2D_CenterLeft" type="RayCast2D" parent="."]
-target_position = Vector2(130, -50)
+target_position = Vector2(250, -70)
 collide_with_areas = true
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 0.5
 autostart = true
 
 [node name="Label" type="Label" parent="."]

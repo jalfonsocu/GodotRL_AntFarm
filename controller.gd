@@ -13,7 +13,7 @@ func get_obs() -> Dictionary:
 	#var obs = [ball_pos.x, ball_pos.z, ball_vel.x/10.0, ball_vel.z/10.0]
 		
 	var obs = [_player.left_collider_type, _player.center_collider_type, _player.right_collider_type,
-	 _player.left_collider_distance, _player.center_collider_distance, _player.right_collider_distance ]
+	 _player.left_collider_distance, _player.center_collider_distance, _player.right_collider_distance, _player.in_food_area ]
 
 	return {"obs":obs}
 

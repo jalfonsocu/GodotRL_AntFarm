@@ -19,6 +19,13 @@ var center_collider_distance = -1
 var left_collider_distance = -1
 var right_collider_distance = -1
 
+
+# temporary variables for increasing reward if distance to food decreases
+var old_center_collider_distance = -1
+var old_left_collider_distance = -1
+var old_right_collider_distance = -1
+# temporary variables for increasing reward if distance to food decreases
+
 var food_area
 var in_food_area = false
 
@@ -61,6 +68,7 @@ func get_input():
 func _physics_process(delta):
 	if ai_controller.needs_reset:
 		ai_controller.reset()
+		energy = max_energy
 		return
 		
 	get_input()
@@ -98,8 +106,20 @@ func _process(delta):
 
 func _on_timer_timeout():
 	energy = energy -1
-	ai_controller.reward -= 0.1
+	ai_controller.reward -= 0.01
 	$Label.text = str(energy)
+	
+	if old_center_collider_distance > center_collider_distance and center_collider_type == 1:
+		ai_controller.reward += 0.01
+	if old_left_collider_distance > left_collider_distance and left_collider_type == 1:
+		ai_controller.reward += 0.01
+	if old_right_collider_distance > right_collider_distance and right_collider_type == 1:
+		ai_controller.reward += 0.01
+	
+	old_center_collider_distance = center_collider_distance
+	old_left_collider_distance = left_collider_distance
+	old_right_collider_distance = right_collider_distance
+	
 	if energy <= 0:
 		ai_controller.done = true
 		ai_controller.needs_reset = true
@@ -116,41 +136,36 @@ func distance_to_collider(ray):
 func detect_object_type(object):
 	if is_instance_valid(object):
 		if  object.to_string() == "Food":
-			ai_controller.reward += 0.1
+			ai_controller.reward += 0.01
 			return 1
+		if  object.to_string() == "Ant":
+			return 2
 		else:
+			#ai_controller.reward -= 0.01
 			return 10
 		
 func eat_action():
 	if in_food_area:
-		if food_area.food_amount <= bite_size:
-			energy = energy + food_area.food_amount
-			food_area.food_amount = 0
-			food_area.queue_free()
-			ai_controller.reward += 5.0
-		else:
-			energy = energy + bite_size
-			food_area.food_amount = food_area.food_amount - bite_size
-			food_area.update_label()
-			ai_controller.reward += 5.0
+		energy = energy + food_area.update_food_amount(bite_size)
+		ai_controller.reward += 5.0
 		if energy > max_energy:
 			energy = max_energy
 		$Label.text = str(energy)
-	
-	in_food_area = false
+	#in_food_area = false
 	
 
 
 func _on_area_2d_area_entered(area):
 	print("Entrada en área")
-	print(area.to_string())
 	if detect_object_type(area) == 1:
 		in_food_area = true
-	food_area = area
-	ai_controller.reward += 0.3
+		food_area = area
+		ai_controller.reward += 0.3
+	
 
 
 func _on_area_2d_area_exited(area):
 	print("Salida área")
 	print(area.to_string())
 	in_food_area = false
+	
